@@ -2,37 +2,29 @@ package com.example.recyclerviewmvvmstudy.service;
 
 import static com.example.recyclerviewmvvmstudy.application.MyApplication.NOTIFICATION_CHANNEL_ID;
 
-import android.app.ActivityManager;
 import android.app.Notification;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
 
 import com.example.recyclerviewmvvmstudy.R;
-import com.example.recyclerviewmvvmstudy.view.MainActivity;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 public class ServiceForeground extends Service {
     private static final String TAG = "ServiceForeground";
 
-    private Handler mHandler = new Handler(Looper.getMainLooper());
+    private Handler handler = new Handler(Looper.getMainLooper());
 
     @Nullable
     @Override
@@ -61,15 +53,17 @@ public class ServiceForeground extends Service {
                         usageStats);
             }
             if (mySortedMap != null && !mySortedMap.isEmpty()) {
-                mHandler.post(()->{
-                    initNotification(mySortedMap.get(
-                            mySortedMap.lastKey()).getPackageName());
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        initNotification(mySortedMap.get(
+                                mySortedMap.lastKey()).getPackageName());
+                    }
                 });
-
             }
         }
 
-        mHandler.postDelayed(this::getPackageNameCurrent,1000);
+        handler.postDelayed(this::getPackageNameCurrent,1000);
     }
 
 
